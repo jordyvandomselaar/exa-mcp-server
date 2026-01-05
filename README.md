@@ -290,4 +290,66 @@ EXA_API_KEY=your-api-key-here TOOLS=web_search_exa DEBUG=true npx jordy-exa-mcp-
 
 ---
 
+## Fork Changes
+
+This fork contains the following changes from the original [exa-labs/exa-mcp-server](https://github.com/exa-labs/exa-mcp-server) repository (all changes made after commit `75e902e0b495d94a025f68ab9c79d6e986316cf2`):
+
+### Package Rename and Publishing
+- **Package renamed**: Changed from `exa-mcp-server` to `jordy-exa-mcp-server` for npm publishing
+- **Version bump**: Updated to version `3.1.4`
+- **NPM package**: Published as `jordy-exa-mcp-server` on npm
+- Updated all references in `package.json`, `server.json`, `gemini-extension.json`, and documentation
+
+### Build System Migration
+- **Migrated from Smithery to Bun**: Replaced Smithery CLI build system with Bun's native build system
+- **Build scripts updated**:
+  - Removed `@smithery/cli` dependency
+  - Changed build command from `smithery build` to `bun build`
+  - Updated output directory from `.smithery/stdio/` to `dist/`
+  - Removed `smithery.yaml` configuration file
+- **Entry point changes**:
+  - Modified `src/index.ts` to use `StdioServerTransport` directly instead of Smithery's transport abstraction
+  - Added direct stdio transport initialization in the main entry point
+  - Changed from default export function to named `createServer` function with separate `main()` entry point
+- **Dockerfile updated**: Migrated to use Bun runtime instead of Node.js
+  - Changed base image to `oven/bun:1-alpine`
+  - Updated build and runtime commands to use `bun` instead of `node`
+  - Updated dependency installation to use `bun install`
+
+### Development Tooling
+- **Added Beads issue tracking**: Integrated beads (bd) for issue tracking and project management
+  - Added `.beads/` directory with configuration files
+  - Created `AGENTS.md` with agent instructions and workflow guidelines
+  - Added `.beads/.gitignore` for beads-specific files
+  - Configured beads metadata and interactions tracking
+- **Added `.gitattributes`**: Added Git attributes configuration file
+
+### Documentation Updates
+- **README improvements**:
+  - Added fork notice at the top
+  - Updated all package references from `exa-mcp-server` to `jordy-exa-mcp-server`
+  - Enhanced environment variable documentation for tool configuration
+  - Updated installation instructions to reflect new package name
+  - Clarified tool selection and configuration options
+
+### Code Changes
+- **Server initialization refactoring**:
+  - Separated server creation logic from transport initialization
+  - Added `parseConfig()` function to handle environment variable parsing
+  - Added `main()` async function for direct execution
+  - Improved error handling and logging
+- **Removed Smithery-specific code**: Cleaned up all Smithery CLI dependencies and abstractions
+
+### Files Changed
+- **Added**: `.beads/` directory (config, README, metadata, interactions)
+- **Added**: `AGENTS.md`, `.gitattributes`, `bun.lock`, `dist/index.js`
+- **Modified**: `package.json`, `package-lock.json`, `src/index.ts`, `README.md`, `Dockerfile`, `server.json`, `gemini-extension.json`
+- **Removed**: `smithery.yaml`
+
+### Summary Statistics
+- **17 files changed**: 653 insertions(+), 70 deletions(-)
+- **6 commits** after the base commit
+
+---
+
 Built with ❤️ by team Exa
