@@ -184,7 +184,8 @@ code %APPDATA%\Claude\claude_desktop_config.json
       "command": "npx",
       "args": ["-y", "jordy-exa-mcp-server"],
       "env": {
-        "EXA_API_KEY": "your-api-key-here"
+        "EXA_API_KEY": "your-api-key-here",
+        "TOOLS": "web_search_exa,get_code_context_exa"
       }
     }
   }
@@ -192,6 +193,8 @@ code %APPDATA%\Claude\claude_desktop_config.json
 ```
 
 Replace `your-api-key-here` with your actual Exa API key from [dashboard.exa.ai/api-keys](https://dashboard.exa.ai/api-keys).
+
+The `TOOLS` environment variable (or `ENABLED_TOOLS`) is optional. If not specified, only `web_search_exa` and `get_code_context_exa` are enabled by default. Use a comma-separated list to enable specific tools.
 
 ### 3. Available Tools & Tool Selection
 
@@ -208,7 +211,7 @@ The Exa MCP server includes powerful tools for developers and researchers:
 - **deep_researcher_start**: Start a smart AI researcher for complex questions. The AI will search the web, read many sources, and think deeply about your question to create a detailed research report.
 - **deep_researcher_check**: Check if your research is ready and get the results. Use this after starting a research task to see if it's done and get your comprehensive report.
 
-**Note:** By default, only `web_search_exa` and `get_code_context_exa` are enabled. You can enable additional tools using the `tools=` parameter (see examples below).
+**Note:** By default, only `web_search_exa` and `get_code_context_exa` are enabled. You can enable additional tools using the `TOOLS` or `ENABLED_TOOLS` environment variable (see examples below).
 
 #### 💻 **Setup for Code Search Only** (Recommended for Developers)
 
@@ -217,13 +220,10 @@ The Exa MCP server includes powerful tools for developers and researchers:
   "mcpServers": {
     "exa": {
       "command": "npx",
-      "args": [
-        "-y",
-        "jordy-exa-mcp-server",
-        "tools=get_code_context_exa"
-      ],
+      "args": ["-y", "jordy-exa-mcp-server"],
       "env": {
-        "EXA_API_KEY": "your-api-key-here"
+        "EXA_API_KEY": "your-api-key-here",
+        "TOOLS": "get_code_context_exa"
       }
     }
   }
@@ -232,39 +232,60 @@ The Exa MCP server includes powerful tools for developers and researchers:
 
 #### Enable All Tools:
 
-You can either enable all tools or any specfic tools. Use a comma-separated list to enable the tools you need:
+You can either enable all tools or any specific tools. Use a comma-separated list in the `TOOLS` or `ENABLED_TOOLS` environment variable:
 
 ```json
 {
   "mcpServers": {
     "exa": {
       "command": "npx",
-      "args": [
-        "-y",
-        "jordy-exa-mcp-server",
-        "tools=get_code_context_exa,web_search_exa,deep_search_exa,company_research_exa,crawling_exa,linkedin_search_exa,deep_researcher_start,deep_researcher_check"
-      ],
+      "args": ["-y", "jordy-exa-mcp-server"],
       "env": {
-        "EXA_API_KEY": "your-api-key-here"
+        "EXA_API_KEY": "your-api-key-here",
+        "TOOLS": "web_search_exa,get_code_context_exa,crawling_exa,company_research_exa,linkedin_search_exa,deep_researcher_start,deep_researcher_check"
       }
     }
   }
 }
 ```
 
+#### Environment Variables
+
+The server supports the following environment variables:
+
+- **`EXA_API_KEY`** (required): Your Exa API key from [dashboard.exa.ai/api-keys](https://dashboard.exa.ai/api-keys)
+- **`TOOLS`** or **`ENABLED_TOOLS`** (optional): Comma-separated list of tool IDs to enable. If not specified, only `web_search_exa` and `get_code_context_exa` are enabled by default.
+- **`DEBUG`** (optional): Set to `true` or `1` to enable debug logging
+
+Available tool IDs:
+- `web_search_exa`
+- `get_code_context_exa`
+- `deep_search_exa`
+- `crawling_exa`
+- `company_research_exa`
+- `linkedin_search_exa`
+- `deep_researcher_start`
+- `deep_researcher_check`
+
 ## Using via NPX
 
-If you prefer to run the server directly, you can use npx:
+If you prefer to run the server directly, you can use npx with environment variables:
 
 ```bash
 # Run with default tools only (web_search_exa and get_code_context_exa)
-npx jordy-exa-mcp-server
+EXA_API_KEY=your-api-key-here npx jordy-exa-mcp-server
 
 # Enable specific tools only
-npx jordy-exa-mcp-server tools=web_search_exa
+EXA_API_KEY=your-api-key-here TOOLS=web_search_exa npx jordy-exa-mcp-server
 
-# All tools
-npx jordy-exa-mcp-server tools=web_search_exa,deep_search_exa,get_code_context_exa,crawling_exa,company_research_exa,linkedin_search_exa,deep_researcher_start,deep_researcher_check
+# Enable multiple tools
+EXA_API_KEY=your-api-key-here TOOLS=web_search_exa,get_code_context_exa,crawling_exa npx jordy-exa-mcp-server
+
+# Enable all tools
+EXA_API_KEY=your-api-key-here TOOLS=web_search_exa,get_code_context_exa,deep_search_exa,crawling_exa,company_research_exa,linkedin_search_exa,deep_researcher_start,deep_researcher_check npx jordy-exa-mcp-server
+
+# With debug logging enabled
+EXA_API_KEY=your-api-key-here TOOLS=web_search_exa DEBUG=true npx jordy-exa-mcp-server
 ```
 
 ---
