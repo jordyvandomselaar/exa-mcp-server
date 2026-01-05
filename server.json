@@ -6,7 +6,7 @@
   "packages": [
     {
       "registryType": "npm",
-      "identifier": "exa-mcp-server",
+      "identifier": "jordy-exa-mcp-server",
       "version": "3.1.3"
     }
   ],
