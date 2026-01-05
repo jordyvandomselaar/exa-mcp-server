@@ -10,10 +10,10 @@
     "url": "git+https://github.com/exa-labs/exa-mcp-server.git"
   },
   "bin": {
-    "exa-mcp-server": ".smithery/stdio/index.cjs"
+    "exa-mcp-server": "dist/index.js"
   },
   "files": [
-    ".smithery"
+    "dist"
   ],
   "keywords": [
     "mcp",
@@ -30,14 +30,12 @@
   ],
   "author": "Exa Labs",
   "scripts": {
-    "build": "npm run build:shttp && npm run build:stdio",
-    "build:stdio": "smithery build src/index.ts --transport stdio -o .smithery/stdio/index.cjs && echo '#!/usr/bin/env node' | cat - .smithery/stdio/index.cjs > temp && mv temp .smithery/stdio/index.cjs && chmod +x .smithery/stdio/index.cjs",
-    "build:shttp": "smithery build src/index.ts --transport shttp -o .smithery/shttp/index.cjs",
-    "prepare": "npm run build:stdio",
-    "watch": "tsc --watch",
-    "dev": "npx @smithery/cli@latest dev",
-    "inspector": "npx @modelcontextprotocol/inspector build/index.js",
-    "prepublishOnly": "npm run build:stdio"
+    "build": "bun build src/index.ts --outdir dist --target node --minify",
+    "prepare": "bun run build",
+    "watch": "bun build src/index.ts --outdir dist --target node --watch",
+    "dev": "bun run src/index.ts",
+    "inspector": "npx @modelcontextprotocol/inspector dist/index.js",
+    "prepublishOnly": "bun run build"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
@@ -46,12 +44,11 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@smithery/cli": "^1.4.4",
     "@types/node": "^20.11.24",
-    "tsx": "^4.7.0",
     "typescript": "^5.3.3"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.0.0",
+    "bun": ">=1.0.0"
   }
 }

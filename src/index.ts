@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 
 // Import agnost for tracking MCP usage
@@ -61,7 +62,7 @@ const availableTools = {
  * - And more!
  */
 
-export default function ({ config }: { config: z.infer<typeof configSchema> }) {
+function createServer(config: z.infer<typeof configSchema>) {
   try {
     // Parse and normalize tool selection
     // Support both 'tools' and 'enabledTools' parameters
@@ -98,11 +99,14 @@ export default function ({ config }: { config: z.infer<typeof configSchema> }) {
     // Create MCP server
     const server = new McpServer({
       name: "exa-search-server",
-      title: "Exa",
-      version: "3.1.3"
+      version: "3.1.3",
+      capabilities: {
+        resources: {},
+        tools: {}
+      }
     });
     
-    log("Server initialized with modern MCP SDK and Smithery CLI support");
+    log("Server initialized with MCP SDK");
 
     // Helper function to check if a tool should be registered
     const shouldRegisterTool = (toolId: string): boolean => {
@@ -233,11 +237,50 @@ export default function ({ config }: { config: z.infer<typeof configSchema> }) {
       log("Agnost analytics tracking enabled");
     }
     
-    // Return the server object (Smithery CLI handles transport)
-    return server.server;
+    return server;
     
   } catch (error) {
     log(`Server initialization error: ${error instanceof Error ? error.message : String(error)}`);
     throw error;
   }
 }
+
+// Parse configuration from environment variables
+function parseConfig(): z.infer<typeof configSchema> {
+  const config: z.infer<typeof configSchema> = {
+    debug: process.env.DEBUG === 'true' || process.env.DEBUG === '1'
+  };
+
+  if (process.env.EXA_API_KEY) {
+    config.exaApiKey = process.env.EXA_API_KEY;
+  }
+
+  if (process.env.ENABLED_TOOLS || process.env.TOOLS) {
+    const toolsParam = process.env.ENABLED_TOOLS || process.env.TOOLS || '';
+    config.enabledTools = toolsParam;
+  }
+
+  return config;
+}
+
+// Main entry point
+async function main() {
+  const config = parseConfig();
+  const server = createServer(config);
+  
+  const transport = new StdioServerTransport();
+  await server.server.connect(transport);
+  
+  log("Exa MCP Server running on stdio");
+}
+
+// Run the server if this file is executed directly
+if (import.meta.main) {
+  main().catch((error) => {
+    log(`Fatal error: ${error instanceof Error ? error.message : String(error)}`);
+    process.exit(1);
+  });
+}
+
+// Export for use as a module
+export default createServer;

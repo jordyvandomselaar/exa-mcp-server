@@ -4,7 +4,6 @@ This is a fork of https://github.com/exa-labs/exa-mcp-server.
 [![Install in Cursor](https://img.shields.io/badge/Install_in-Cursor-000000?style=flat-square&logoColor=white)](https://cursor.com/en/install-mcp?name=exa&config=eyJuYW1lIjoiZXhhIiwidHlwZSI6Imh0dHAiLCJ1cmwiOiJodHRwczovL21jcC5leGEuYWkvbWNwIn0=)
 [![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=exa&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.exa.ai%2Fmcp%22%7D)
 [![npm version](https://badge.fury.io/js/exa-mcp-server.svg)](https://www.npmjs.com/package/exa-mcp-server)
-[![smithery badge](https://smithery.ai/badge/exa)](https://smithery.ai/server/exa)
 
 ## Exa Code: fast, efficient web context for coding agents
 
@@ -147,13 +146,6 @@ npm install -g exa-mcp-server
 ```bash
 claude mcp add exa -e EXA_API_KEY=YOUR_API_KEY -- npx -y exa-mcp-server
 ```
-
-### Using Exa MCP through Smithery
-
-To install the Exa MCP server via [Smithery](https://smithery.ai/server/exa), head over to:
-
-[smithery.ai/server/exa](https://smithery.ai/server/exa)
-
 
 ## Configuration ⚙️
 
